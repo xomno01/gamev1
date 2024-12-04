@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NEXUS - Quantum Gaming Experience</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+
+        :root {
+            --dark-bg: #0a0b1a;
+            --neon-blue: #00f0ff;
+            --neon-purple: #8a2be2;
+            --grid-color: rgba(255,255,255,0.05);
+            --matrix-green: #00ff41;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(0deg, transparent 24%, var(--grid-color) 25%, var(--grid-color) 26%, transparent 27%, transparent 74%, var(--grid-color) 75%, var(--grid-color) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, var(--grid-color) 25%, var(--grid-color) 26%, transparent 27%, transparent 74%, var(--grid-color) 75%, var(--grid-color) 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .matrix-cursor {
+            position: fixed;
+            color: var(--matrix-green);
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            pointer-events: none;
+            text-shadow: 0 0 5px var(--matrix-green);
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            font-size: 12px;
+            opacity: 0.8;
+            transition: all 0.1s ease;
+        }
+
+        .matrix-cursor.active {
+            transform: translate(-50%, -50%) scale(1.5);
+            text-shadow: 0 0 10px var(--matrix-green);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 100px;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+            position: relative;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            opacity: 1;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--neon-blue);
+            transition: width 0.3s;
+        }
+
+        .nav a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            min-height: 70vh;
+        }
+
+        .hero-content {
+            flex: 1;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            margin: 30px 0;
+            color: rgba(255,255,255,0.7);
+            max-width: 500px;
+        }
+
+        .game-visual {
+            flex: 1;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .game-screen {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 0 50px var(--neon-blue);
+            transform: rotateY(-20deg);
+            transition: all 0.5s ease;
+        }
+
+        .game-screen:hover {
+            transform: rotateY(-10deg) scale(1.05);
+            box-shadow: 0 50px 120px rgba(0,0,0,0.7), 0 0 80px var(--neon-blue);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .features {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 100px;
+        }
+
+        .feature {
+            flex: 1;
+            text-align: center;
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            margin: 0 15px;
+            transition: all 0.5s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-20px);
+            background: rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .hero, .features {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-background"></div>
+    <div class="container">
+        <header class="header">
+            <div class="logo">NEXUS</div>
+            <nav class="nav">
+                <a href="#explore">Explore</a>
+                <a href="#technology">Technology</a>
+                <a href="#experience">Experience</a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Quantum Gaming Redefined</h1>
+                <p>Immerse yourself in a revolutionary gaming universe where technology meets imagination. Break the boundaries of reality and experience gaming like never before.</p>
+                <a href="#" class="btn btn-primary">Enter Quantum Realm</a>
+            </div>
+            <div class="game-visual">
+                <img src="https://i.ibb.co/jwC8dLf/0b06e5189daa52669db938ecaa86aace-8354033190133972533.webp" alt="Quantum Game" class="game-screen">
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature">
+                <h3>Hyper-Realistic Worlds</h3>
+                <p>Experience game environments that blur the line between reality and imagination.</p>
+            </div>
+            <div class="feature">
+                <h3>Adaptive AI</h3>
+                <p>Intelligent game mechanics that learn and evolve with your gameplay style.</p>
+            </div>
+            <div class="feature">
+                <h3>Quantum Mechanics</h3>
+                <p>Revolutionary game design inspired by cutting-edge quantum technology.</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.createElement('div');
+            cursor.classList.add('matrix-cursor');
+            document.body.appendChild(cursor);
+
+            document.addEventListener('mousemove', (e) => {
+                const binaryText = Array.from({length: 10}, () => Math.random() > 0.5 ? '1' : '0').join('');
+                
+                cursor.innerHTML = binaryText;
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
+            });
+
+            const hoverElements = document.querySelectorAll('a, .feature, .btn');
+            hoverElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.classList.add('active');
+                });
+
+                el.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
